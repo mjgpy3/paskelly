@@ -1,10 +1,16 @@
 num = lambda name: 'Num ' + name
 
+def curry_n(n, fn, args = []):
+  new_n = n - len(args)
+  if new_n == 0:
+    return fn(*args)
+  return lambda *args2: curry_n(n, fn, args + list(args2))
+
 identity = lambda x: x
 identity.sign = ['a', 'a']
 identity.example = lambda: identity(42) == 42
 
-const = lambda x: lambda _: x
+const = curry_n(2, lambda a, b: a)
 const.sign = ['a', 'b', 'a']
 const.example = lambda: const(42)(99) == 42
 
