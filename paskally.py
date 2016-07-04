@@ -40,6 +40,13 @@ compose.example = lambda: compose(
 reverse_fn = lambda fn: lambda *args: fn(*args[::-1])
 reverse_fn.example = lambda: reverse_fn(lambda a, b: a - b)(2, 44) == 42
 
+pipe = reverse_fn(compose)
+pipe.example = lambda: pipe(
+  lambda a: 4 * a,
+  lambda a: a + 1,
+  lambda a: a * 2
+  )(5) == 42
+
 nth_arg = lambda n: lambda *args: args[n]
 nth_arg.sign = ['int', '(a, .., m)', 'a|...|m']
 nth_arg.example = lambda: nth_arg(2)(1, 2, 42, 4) == 42
@@ -77,6 +84,7 @@ if __name__ == '__main__':
     curry_n,
     compose2,
     compose,
+    pipe,
     reverse_fn,
     foldr,
     identity,
