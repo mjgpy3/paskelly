@@ -9,10 +9,6 @@ def curry_n(n, fn, args = []):
 curry_n.sign = ['int', ['(a, ..., m)', 'n'], ['a', '...', 'm', 'n']]
 curry_n.example = lambda: curry_n(3, lambda a, b, c: a + b * c)(1, 2)(3) == 7
 
-compose2 = curry_n(3, lambda f, g, x: f(g(x)))
-compose2.sign = [['b', 'c'], ['a', 'b'], ['a', 'c']]
-compose2.example = lambda: compose2(lambda a: a * 2, lambda a: a + 1)(20) == 42
-
 identity = lambda x: x
 identity.sign = ['a', 'a']
 identity.example = lambda: identity(42) == 42
@@ -20,6 +16,29 @@ identity.example = lambda: identity(42) == 42
 const = curry_n(2, lambda a, _: a)
 const.sign = ['a', 'b', 'a']
 const.example = lambda: const(42)(99) == 42
+
+def do_foldr(fn, init, values):
+  if len(values) == 0:
+    return init
+  return fn(values[0], do_foldr(fn, init, values[1:]))
+
+foldr = curry_n(3, do_foldr)
+foldr.sign = [['a', 'b', 'b'], 'b', lizst('a'), 'b']
+foldr.example = lambda: foldr(lambda a, b: a - b, 0, [1, 2, 3]) == 2
+
+compose2 = curry_n(3, lambda f, g, x: f(g(x)))
+compose2.sign = [['b', 'c'], ['a', 'b'], ['a', 'c']]
+compose2.example = lambda: compose2(lambda a: a * 2, lambda a: a + 1)(20) == 42
+
+compose = lambda *args: foldr(compose2, identity, args)
+compose.example = lambda: compose(
+  lambda a: a * 2,
+  lambda a: a + 1,
+  lambda a: 4 * a
+  )(5) == 42
+
+reverse_fn = lambda fn: lambda *args: fn(*args[::-1])
+reverse_fn.example = lambda: reverse_fn(lambda a, b: a - b)(2, 44) == 42
 
 nth_arg = lambda n: lambda *args: args[n]
 nth_arg.sign = ['int', '(a, .., m)', 'a|...|m']
@@ -57,6 +76,9 @@ if __name__ == '__main__':
   units = [
     curry_n,
     compose2,
+    compose,
+    reverse_fn,
+    foldr,
     identity,
     nth_arg,
     const,
