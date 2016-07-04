@@ -9,6 +9,10 @@ def curry_n(n, fn, args = []):
 curry_n.sign = ['int', ['(a, ..., m)', 'n'], ['a', '...', 'm', 'n']]
 curry_n.example = lambda: curry_n(3, lambda a, b, c: a + b * c)(1, 2)(3) == 7
 
+compose2 = curry_n(3, lambda f, g, x: f(g(x)))
+compose2.sign = [['b', 'c'], ['a', 'b'], ['a', 'c']]
+compose2.example = lambda: compose2(lambda a: a * 2, lambda a: a + 1)(20) == 42
+
 identity = lambda x: x
 identity.sign = ['a', 'a']
 identity.example = lambda: identity(42) == 42
@@ -52,6 +56,7 @@ if_else.example = lambda: if_else(equals(41), add(1), add(-1))(41) == 42
 if __name__ == '__main__':
   units = [
     curry_n,
+    compose2,
     identity,
     nth_arg,
     const,
