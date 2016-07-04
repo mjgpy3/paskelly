@@ -1,5 +1,5 @@
 num = lambda name: 'Num ' + name
-lizst = lambda inner: 'List ' + inner
+lst = lambda inner: 'List ' + inner
 
 def curry_n(n, fn, args = []):
   if n - len(args) == 0:
@@ -23,7 +23,7 @@ def do_foldr(fn, init, values):
   return fn(values[0], do_foldr(fn, init, values[1:]))
 
 foldr = curry_n(3, do_foldr)
-foldr.sign = [['a', 'b', 'b'], 'b', lizst('a'), 'b']
+foldr.sign = [['a', 'b', 'b'], 'b', lst('a'), 'b']
 foldr.example = lambda: foldr(lambda a, b: a - b, 0, [1, 2, 3]) == 2
 
 compose2 = curry_n(3, lambda f, g, x: f(g(x)))
@@ -52,7 +52,7 @@ nth_arg.sign = ['int', '(a, .., m)', 'a|...|m']
 nth_arg.example = lambda: nth_arg(2)(1, 2, 42, 4) == 42
 
 of = lambda x: [x]
-of.sign = ['a', lizst('a')]
+of.sign = ['a', lst('a')]
 of.example = lambda: of(42) == [42]
 
 add = curry_n(2, lambda a, b: a + b)
